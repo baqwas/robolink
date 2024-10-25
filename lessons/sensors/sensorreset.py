@@ -1,10 +1,8 @@
 #!/usr/bin/env python3
 """
-rangefront.py
+sensorreset.py
 2014-10-24 0.1 Initial DRAFT
 Copyright (C) 2024 ParkCircus Productions
-
-Detection of physical objects in front
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -19,44 +17,38 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-The front range sensor can detect an object upto a distance of 100 centimeters
-
 Objectives:
-- Check if the front distance is beyond a stipulated value
-- Terminate flight if distance is less than the stipulated value
+- Use the print() function and describe its value in debugging (finding and
+fixing errors) in your code
+- Add comments to your code and understand the importance of well
+documented code
+- Pair with your drone using the drone.pair() function
+Understand how to use the drone.takeoff()and drone.land() functions
 
 Steps:
-- obtain wall distance
-- evaluate options
+- pairing
+- takeoff
+- measure height
+- land
 
-@sa https://learn.robolink.com/lesson/3-6-front-range-sensor-1-cde/
+@sa https://learn.robolink.com/lesson/3-5-height-sensor-cde/
 """
 from codrone_edu.drone import *  # robolink package
 
-distance = 50           # centimeters
-pitchpower = 30         # % power for pitch, -100 to +100
-duration = 0
-moveperiod = 0.2        # seconds, move duration
-
+hoverperiod = 3         # how long should the drone stay in the air, seconds
+settingyaw = 50         #
 drone = Drone()         # instantiate a drone entity for use in script
 drone.pair()            # pair controller with drone
 print("Drone paired!")  # obligatory message
 
+print(f"Before: X={drone.get_x_angle()}, Y={drone.get_y_angle()}, Z={drone.get_z_angle()}")
 drone.takeoff()         # time to rise and shine
 print("Drone takeoff in progress")  # obligatory message
-while True:
-    if drone.detect_wall(distance):
-        print(f"Front obstacle <= {distance} cm; suspending forward movement.")
-                        # basic backtrack
-                        # assuming no obstacle from origination point
-                        # will revisit logic later
-        drone.set_pitch(-pitchpower)    # travel in reverse direction
-        drone.move(duration)            # use accumulated time period
-        break
+sleep(hoverperiod)      # need to work on the delay period
+print("In the air!")    # obligatory
 
-    drone.set_pitch(pitchpower)         # maintain forward movement
-    drone.move(moveperiod)              # fixed move increment
-    duration += moveperiod              # accumulation duration
+drone.set_yaw(settingyaw)   # -100 - + 100; -ve is right, +ve is left
+drone.set_trim(25, 15)  # roll & pitch; -100 - +100
 
 print("Landing initiated")
 drone.land()

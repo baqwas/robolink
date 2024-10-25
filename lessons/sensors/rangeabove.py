@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-rangefront.py
+rangeabove.py
 2014-10-24 0.1 Initial DRAFT
 Copyright (C) 2024 ParkCircus Productions
 
@@ -31,38 +31,32 @@ Steps:
 
 @sa https://learn.robolink.com/lesson/3-6-front-range-sensor-1-cde/
 """
+
 from codrone_edu.drone import *  # robolink package
+import time
 
-distance = 50           # centimeters
-pitchpower = 30         # % power for pitch, -100 to +100
-duration = 0
-moveperiod = 0.2        # seconds, move duration
-
+hoverperiod = 3         # hover period, seconds
 drone = Drone()         # instantiate a drone entity for use in script
 drone.pair()            # pair controller with drone
 print("Drone paired!")  # obligatory message
 
+height_takeoff = drone.get_height()   # base elevation, cm
+print(f"Takeoff elevation {height_takeoff} cm")
+
 drone.takeoff()         # time to rise and shine
 print("Drone takeoff in progress")  # obligatory message
-while True:
-    if drone.detect_wall(distance):
-        print(f"Front obstacle <= {distance} cm; suspending forward movement.")
-                        # basic backtrack
-                        # assuming no obstacle from origination point
-                        # will revisit logic later
-        drone.set_pitch(-pitchpower)    # travel in reverse direction
-        drone.move(duration)            # use accumulated time period
-        break
 
-    drone.set_pitch(pitchpower)         # maintain forward movement
-    drone.move(moveperiod)              # fixed move increment
-    duration += moveperiod              # accumulation duration
+drone.hover(hoverperiod)          # hover for specified time, seconds
+print(f"Hover for {hoverperiod} seconds")
+height_hover = drone.get_height()    # current altitude, cm
+print(f"Hover elevation {height_hover} cm")
 
 print("Landing initiated")
 drone.land()
+time.sleep(hoverperiod)
 print("The Drone has landed")
+height_landing = drone.get_height()    # current altitude, cm
+print(f"Landing elevation {height_landing} cm")
 
 drone.close()
 print("All done!")
-
-
