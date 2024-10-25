@@ -30,7 +30,6 @@ from codrone_edu.drone import *  # robolink package
 import time
 
 dataset = "color_data"          # dataset label for use in autonomous
-samples = 500                   # change as appropriate
 interval = 0.5
 
 drone = Drone()                 # instantiate a drone entity for use in script
