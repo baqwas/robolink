@@ -23,5 +23,17 @@ Aerial drone examples for Mission 2025 Gravity
 #### Landing Pad
 
 ### Identify Color
+#### Preparation
+- Enable control flight mode
+- Press *P* or *S* button
+- Ensure the controller displays the HSV page for Hue, Saturation and Value
+| Attribute | Min | Max |
+|-----------|-----|-----|
+| Hue | 0 | 360 |
+| Saturation | 0 | 100 |
+| Value | 0 | 100 |
+
+#### Color Sensor Calibration
+
 
 ### Fly Under Arch
