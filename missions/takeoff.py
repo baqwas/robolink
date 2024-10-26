@@ -98,7 +98,7 @@ while error_altitude > 1:
 drone.hover(3)  # for test purpose
 print(f"Current bottom range {drone.get_bottom_range()}")
 
-#TODO keep_distance()
+# keep_distance()
 
 drone.set_throttle(20)
 print("Landing initiated")
