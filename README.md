@@ -27,6 +27,7 @@ Aerial drone examples for Mission 2025 Gravity
 - Enable control flight mode
 - Press *P* or *S* button
 - Ensure the controller displays the HSV page for Hue, Saturation and Value
+
 | Attribute | Min | Max |
 |-----------|-----|-----|
 | Hue | 0 | 360 |
