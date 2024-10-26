@@ -18,12 +18,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 Objectives:
-- Use the print() function and describe its value in debugging (finding and
-fixing errors) in your code
-- Add comments to your code and understand the importance of well
-documented code
-- Pair with your drone using the drone.pair() function
-Understand how to use the drone.takeoff()and drone.land() functions
+PID control is a control loop mechanism that calculates an error signal and
+applies a correction based on proportional, integral, and derivative terms.
 
 Steps:
 - pairing
