@@ -160,8 +160,11 @@ while True:
 
                         # use a filter function to dampen sensor noise
     filtered_pitch = low_pass_filter(control_pitch, filtered_pitch, alpha)
+    filtered_roll = low_pass_filter(control_roll, filtered_roll, alpha)
+    filtered_yaw = low_pass_filter(control_yaw, filtered_yaw, alpha)
+
                         # Set the desired angles to the drone
-    set_desired_power(myDrone, control_pitch, control_roll, control_yaw)
+    set_desired_power(myDrone, filtered_pitch, filtered_roll, filtered_yaw)
 
     time.sleep(deltat)  # may need to adjust the time step as needed
     if keyboard.is_pressed('esc'):
