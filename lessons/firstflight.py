@@ -36,17 +36,27 @@ from codrone_edu.drone import *  # robolink package
 
 hoverperiod = 1         # how long should the drone stay in the air, seconds
 drone = Drone()         # instantiate a drone entity for use in script
-drone.pair()            # pair controller with drone
+drone.pair()            # pair controller with drone (port_name='COM4') specific port name is optional
 print("Drone paired!")  # obligatory message
 
-drone.takeoff()         # time to rise and shine
+drone.takeoff()         # time to rise and shine to 80 cm and hover; parameters cannot be modified
 print("Drone takeoff in progress")  # obligatory message
-sleep(hoverperiod)      # need to work on the delay period
+drone.hover(hoverperiod) # at least 1 sec needed to stabilize takeoff and hover
+                        # hover indefinitely if no parameter is specified
 print("In the air!")    # obligatory
 
 print("Landing initiated")
-drone.land()
+                        # need some "time" after takeoff before the subsequent command is processed
+                        # if land() follows takeoff() immediately then land() may not be performed
+drone.land()            # stop all commands, hover and perform a soft landing
 print("The Drone has landed")
+
+battery_level = drone.get_battery()
+if battery_level < 90:
+    drone.drone_buzzer(400, 300)    # (note, duration)
+    drone.drone_buzzer(600, 300)    # (Hz, milliseconds)
+else:
+    print(f"Battery level is {battery_level}")
 
 drone.close()
 print("All done!")

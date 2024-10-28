@@ -112,16 +112,16 @@ myDrone.pair()            # pair controller with drone
 print("Drone paired!")  # obligatory message
 
 # Initialize PID controllers for each axis
-Kp_pitch = 0.6
-Ki_pitch = 3.5
+Kp_pitch = 0.15
+Ki_pitch = 0.15
 Kd_pitch = 0.03
 pid_pitch = PIDController(Kp_pitch, Ki_pitch, Kd_pitch)
-Kp_roll = 0.6
-Ki_roll = 3.5
+Kp_roll = 0.15
+Ki_roll = 0.15
 Kd_roll = 0.03
 pid_roll = PIDController(Kp_roll, Ki_roll, Kd_roll)
-Kp_yaw = 2.
-Ki_yaw = 12.
+Kp_yaw = 0.15
+Ki_yaw = 0.15
 Kd_yaw = 0.
 pid_yaw = PIDController(Kp_yaw, Ki_yaw, Kd_yaw)
 alpha = 0.8
@@ -137,14 +137,20 @@ desired_yaw = 0.0
 deltat = 0.01
                         # target altitude
 # slot_elevation = 30.0
+myDrone.reset_sensor()  # roll, pitch, yaw := zero
+sleep(1)                # to avoid next drone command to be skipped
+myDrone.set_initial_pressure() # initialized the pressure value
+sleep(1)                # playing it safe
 
-myDrone.takeoff()         # time to rise and shine
+myDrone.takeoff()       # time to rise and shine
 print("Drone takeoff in progress")  # obligatory message
 sleep(3)      # need to work on the delay period
 print("In the air!")    # obligatory
 
-# Main control loop
+                        # Main control loop
 while True:
+                        # list of 31 values
+    sensor_data = myDrone.get_sensor_data()
                         # Get current angles
     current_pitch, current_roll, current_yaw = get_current_angles(myDrone)
 
@@ -166,8 +172,10 @@ while True:
                         # Set the desired angles to the drone
     set_desired_power(myDrone, filtered_pitch, filtered_roll, filtered_yaw)
 
+    print(f"P:{error_pitch}:{filtered_pitch}, R:{error_roll}:{filtered_roll}, Y:{error_yaw}:{filtered_yaw}")
     time.sleep(deltat)  # may need to adjust the time step as needed
-    if keyboard.is_pressed('esc'):
+    error_sum = error_pitch + error_roll + error_yaw
+    if error_sum <= 0.001:
         break
 
 print("Landing initiated")
