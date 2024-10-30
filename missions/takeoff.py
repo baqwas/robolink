@@ -39,6 +39,7 @@ Steps:
 
 from codrone_edu.drone import *  # robolink package
 
+
 class PIDcontroller:
     def __init__(self, Kp, Ki, Kd):
         self.Kp = Kp
@@ -48,16 +49,17 @@ class PIDcontroller:
         self.previous_error = 0
         self.integral = 0
 
-    def calculate_output(self, error, deltat):
-        self.integral += error * deltat
-        derivative = (error - self.previous_error) / deltat
-        output = self.Kp * error + self.Ki * self.integral + self.Kd * derivative
-        self.previous_error = error
+    def calculate_output(self, error_calc, deltat):
+        self.integral += error_calc * deltat
+        derivative = (error_calc - self.previous_error) / deltat
+        output = self.Kp * error_calc + self.Ki * self.integral + self.Kd * derivative
+        self.previous_error = error_calc
         return output
+
 
 dataset = "color_data"  # dataset label for use in autonomous
 hoverperiod = 1  # how long should the drone stay in the air, seconds
-desiredFL = 100  # desired flight level
+desiredFL = 10  # desired flight level
 Kp_altitude = 0.15
 Ki_altitude = 0.15
 Kd_altitude = 0.05
@@ -67,6 +69,7 @@ pid_altitude = PIDcontroller(Kp_altitude, Ki_altitude, Kd_altitude)
 drone = Drone()  # instantiate a drone entity for use in script
 drone.pair()  # pair controller with drone
 print("Drone paired!")  # obligatory message
+drone.reset_move()  # reset the values of roll, pitch, yaw and throttle to 0
 """
 This function makes the drone takeoff at an average height of 80 centimeters and hover. 
 The drone will always hover for 1 second in order to stabilize before it executes the next command. 
@@ -80,33 +83,42 @@ If given no parameters, it will hover indefinitely until given a another command
 """
 drone.hover(hoverperiod)  # parameter in seconds
 print("In the air!")  # obligatory
+"""
+for debugging purposes only
+"""
+# [3] elevation from barometer, m
+# [4] height from bottom range sensor, m
+# [16] x, m
+# [17] y, m
+# [18] z, m
+sensor_data = drone.get_sensor_data()
+print(f"{sensor_data[3]}, {sensor_data[4]}; {sensor_data[16]}, {sensor_data[17]}, {sensor_data[18]}")
 
 drone.set_throttle(10)  # %, -100 - +100
 current_bottom_range = drone.get_bottom_range("cm")  # m, mm and in also available; cm is default if omitted
 print(f"Bottom range: {current_bottom_range}")
 error_altitude = desiredFL - current_bottom_range
-while error_altitude > 1:
-    current_bottom_range = drone.get_bottom_range() # current altitude
-    error_altitude = desiredFL - current_bottom_range    # altitude error
-    control_output = pid_altitude.calculate_output(error_altitude, dt) # control output
+while error_altitude > 0.1:
+    current_bottom_range = drone.get_bottom_range()  # current altitude
+    error_altitude = desiredFL - current_bottom_range  # altitude error
+    control_output = pid_altitude.calculate_output(error_altitude, dt)  # control output
     control_output = max(min(control_output, 100), -100)
     drone.set_throttle(control_output)  # set desired thrust to the drone
     drone.move()
     time.sleep(dt)
-    print(f"Bottom range: {current_bottom_range}")
+    print(f"Bottom range: {current_bottom_range}; error: {error_altitude}, {control_output}")
 
-drone.hover(3)  # for test purpose
-print(f"Current bottom range {drone.get_bottom_range()}")
+sensor_data = drone.get_sensor_data()
+print(f"{sensor_data[3]}, {sensor_data[4]}; {sensor_data[16]}, {sensor_data[17]}, {sensor_data[18]}")
 
-# keep_distance()
-
-drone.set_throttle(20)
 print("Landing initiated")
 drone.land()  # land on mat to detect colors
 print("The Drone has landed")
+sensor_data = drone.get_sensor_data()
+print(f"{sensor_data[3]}, {sensor_data[4]}; {sensor_data[16]}, {sensor_data[17]}, {sensor_data[18]}")
 
 # drone.load_classifier(dataset)  # ensure correct value for dataset variable
-print(f"Loaded color classifier {dataset}")
+# print(f"Loaded color classifier {dataset}")
 color_data = drone.get_color_data()  # obtain sensor reading
 color = drone.predict_colors(color_data)  # compare reading with custom dataset
 print(f"The drone sees color {color}")

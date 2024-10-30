@@ -36,8 +36,8 @@ drone = Drone()                 # instantiate a drone entity for use in script
 drone.pair()                    # pair controller with drone
 print("Drone paired!")          # obligatory message
 
-drone.load_classifier(dataset)  # ensure correct value for dataset variable
-print(f"Loaded color classifier {dataset}")
+#  drone.load_classifier(dataset)  # ensure correct value for dataset variable
+#  print(f"Loaded color classifier {dataset}")
 
 try:
     while True:
