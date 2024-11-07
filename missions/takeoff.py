@@ -94,7 +94,7 @@ for debugging purposes only
 sensor_data = drone.get_sensor_data()
 print(f"{sensor_data[3]}, {sensor_data[4]}; {sensor_data[16]}, {sensor_data[17]}, {sensor_data[18]}")
 
-drone.set_throttle(10)  # %, -100 - +100
+drone.set_throttle(50)  # %, -100 - +100
 current_bottom_range = drone.get_bottom_range("cm")  # m, mm and in also available; cm is default if omitted
 print(f"Bottom range: {current_bottom_range}")
 error_altitude = desiredFL - current_bottom_range

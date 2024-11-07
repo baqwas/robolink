@@ -146,10 +146,10 @@ green, teal,  blue, purple
  - Check wires after any maintenance task 
 
 # References
-[Getting Started](https://learn.robolink.com/product/codrone-edu) 
-[Python for Robolink](https://codrone.robolink.com/edu/python/) 
-[New Documentation Site](https://docs.robolink.com/) 
-[How to take care of your motors]() 
-[User Manual] 
-[Basecamp](https://learn.robolink.com/) 
-[Support](mailto:support@robolink.com)
+[Getting Started](https://learn.robolink.com/product/codrone-edu)  
+[Python for Robolink](https://codrone.robolink.com/edu/python/)   
+[New Documentation Site](https://docs.robolink.com/)  
+[How to take care of your motors]()  
+[User Manual](https://online.flippingbook.com/view/201482508/)  
+[Basecamp](https://learn.robolink.com/)  
+[Support](mailto:support@robolink.com)  

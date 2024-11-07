@@ -190,13 +190,26 @@ sleep(1)                # playing it safe
 
 myDrone.takeoff()       # time to rise and shine
 print("Drone takeoff in progress")  # obligatory message
-sleep(3)      # need to work on the delay period
-print("In the air!")    # obligatory
+myDrone.hover(1)        # need to work on the delay period; estimated height is 80 cm
+current_height = myDrone.get_height()
+print(f"In the air at {current_height}!")    # obligatory
 
-                        # Main control loop
-currentstate = levelstate()
-sensor_data = myDrone.get_sensor_data() # list of 31 values
-print(f"{sensor_data}")
+myDrone.set_throttle(-50)   #
+myDrone.move()
+while True:
+    current_height = myDrone.get_height()
+    if current_height < 2:
+        break
+    print(f"Height: {current_height}")
+
+print("Stabilizing flight level")
+myDrone.set_throttle(0)
+myDrone.move()
+
+    # Main control loop
+# currentstate = levelstate()
+# sensor_data = myDrone.get_sensor_data() # list of 31 values
+# print(f"{sensor_data}")
 
 
 print("Landing initiated")
