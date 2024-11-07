@@ -1,5 +1,18 @@
-# robolink
-Aerial drone examples for Mission 2025 Gravity
+# Introduction
+Aerial drone examples for Mission 2025 Gravity  
+## Table of Contents
+
+## Features
+
+## Usage
+Use the following standard command format to run the scripts:  
+`
+python <script>
+`  
+## Files
+Some files are scripts that are meant to be invoked as commands while other files are helper scripts that encapsulate key operations and controls for the drone.  
+## References
+
 ## Matches
 - Two 5-minute sessions
 - Up to 3 Autonomous Flight Skills Mission runs
@@ -146,10 +159,10 @@ green, teal,  blue, purple
  - Check wires after any maintenance task 
 
 # References
-[Getting Started](https://learn.robolink.com/product/codrone-edu)  
-[Python for Robolink](https://codrone.robolink.com/edu/python/)   
-[New Documentation Site](https://docs.robolink.com/)  
-[How to take care of your motors]()  
-[User Manual](https://online.flippingbook.com/view/201482508/)  
-[Basecamp](https://learn.robolink.com/)  
-[Support](mailto:support@robolink.com)  
+[Getting Started](https://learn.robolink.com/product/codrone-edu) 
+[Python for Robolink](https://codrone.robolink.com/edu/python/) 
+[New Documentation Site](https://docs.robolink.com/) 
+[How to take care of your motors]() 
+[User Manual] 
+[Basecamp](https://learn.robolink.com/) 
+[Support](mailto:support@robolink.com)
