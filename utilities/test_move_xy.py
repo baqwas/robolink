@@ -39,7 +39,18 @@ Key Points:
 - Real-World Considerations:
     Real-world factors like wind, air resistance, and motor dynamics can affect the drone's behavior. You may need to adjust the PID gains and control strategy to compensate for these factors.
 
-
+Robolink functions:
+    Drone - instantiate an entity object for the drone
+    pair() - connects controller with the program. One can also set a specific USB port name.
+    reset_sensor() - reset the gyro angles back to zero for roll, pitch, and yaw
+    set_initial_pressure() - saves an initial pressure reading to the drone
+    takeoff() - takeoff to an average height of 80 centimeters and hover
+    get_position_data() - returns a list of position data for the drone
+    set_roll(x) - set the roll variable. Once you set roll, you have to use move() to actually execute the movement.
+    set_pitch(y) - set the pitch variable. Once you set pitch, you have to use move() to actually execute the movement.
+    move() - move the drone based on the set flight variables (set_pitch, set_roll, etc.)
+    land() - stop all commands, hover, and make a soft landing where it is
+    close()
 
 @sa https://oscarliang.com/pid/
 """
@@ -58,7 +69,9 @@ def move_delta_xy(target_flow_x, target_flow_y, Kp, Ki, Kd, landing):
     :param landing: True to land drone after move, False do not land drone after move
     :return:
     """
-                            # Differential component in PID controller equation
+    clamp_lambda = lambda value, min_value, max_value: max(min(value, max_value), min_value)
+
+    # Differential component in PID controller equation
     prev_error_x = 0.
     prev_error_y = 0.
     sum_error_x = 0.
@@ -74,7 +87,7 @@ def move_delta_xy(target_flow_x, target_flow_y, Kp, Ki, Kd, landing):
     sleep(1)                # to avoid next drone command to be skipped
     myDrone.set_initial_pressure() # initialized the pressure value
     print("Pressure sensor initialized")  # obligatory message
-    sleep(1)                # playing it safe
+    sleep(1)                # playing it safe otherwise the take-off might be skipped
 
     myDrone.takeoff()       # time to rise and shine
     print("Drone takeoff in progress")  # obligatory message
@@ -88,30 +101,26 @@ def move_delta_xy(target_flow_x, target_flow_y, Kp, Ki, Kd, landing):
     position_target = [position_current[0] + target_flow_x, position_current[1] + target_flow_y, position_current[2]]
 
     while True:
-        # Read current flow values
+                            # Read current flow values
         position_current = myDrone.get_position_data()
         if (position_target[0] - position_current[0]) < 1.0 and (position_target[1] - position_current[1]) < 1.0:
             break
-
-        # Calculate error
+                            # Calculate error
         error_x = target_flow_x - position_current[0]
         error_y = target_flow_y - position_current[1]
         sum_error_x += error_x
         sum_error_y += error_y
-
-        # Calculate PID output
-        output_x = Kp * error_x + Ki * sum_error_x + Kd * (error_x - prev_error_x)
-        output_y = Kp * error_y + Ki * sum_error_y + Kd * (error_y - prev_error_y)
-
-        # Set roll and pitch angles
+                            # Calculate PID output
+        output_x = clamp_lambda(Kp * error_x + Ki * sum_error_x + Kd * (error_x - prev_error_x), -100., 100.)
+        output_y = clamp_lambda(Kp * error_y + Ki * sum_error_y + Kd * (error_y - prev_error_y), -100, 100.)
+                            # Set roll and pitch angles
         myDrone.set_roll(output_x)
         myDrone.set_pitch(output_y)
-
-        # Update previous error
+        myDrone.move()      # execute  indefinitely
+                            # Update previous error
         prev_error_x = error_x
         prev_error_y = error_y
-
-        # Adjust the loop time to control the movement rate
+                            # Adjust the loop time to control the movement rate
         time.sleep(0.01)
 
     if landing:
